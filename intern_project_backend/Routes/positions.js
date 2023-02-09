@@ -1,19 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const Position = require("../models/position");
+const { allowedRoles, verifyToken } = require("../util");
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   let positions = await Position.find();
   return res.status(200).json({ positions });
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   let id = req.params.id;
   let position = await Position.findById(id);
   return res.status(200).json({ position });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, allowedRoles(["recruiter"]), async (req, res) => {
   let fields = req.body.position;
   let position;
 
@@ -27,7 +28,7 @@ router.post("/", async (req, res) => {
   return res.status(200).json(position);
 });
 
-router.patch("/", async (req, res) => {
+router.patch("/", verifyToken, allowedRoles(["recruiter"]), async (req, res) => {
   let fields = req.body.position;
   let position = await Position.findById(fields.id);
 
@@ -42,7 +43,7 @@ router.patch("/", async (req, res) => {
   return res.status(200).json(position);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, allowedRoles(["recruiter"]), async (req, res) => {
   let id = req.params.id;
   await Position.findByIdAndDelete(id);
 

@@ -6,7 +6,7 @@ const routesurl = require("./Routes/Routes");
 
 const app = express();
 var PORT = process.env.PORT || 3000;
-const dotenv = require("dotenv");
+require("dotenv").config();
 
 //middleware
 app.use(express.json());
@@ -18,7 +18,6 @@ app.use("/api/recruiter", require("./Routes/recruiter"));
 app.use("/api/routes", routesurl);
 
 //db config
-dotenv.config();
 mongoose.set("strictQuery", false);
 mongoose.connect(process.env.CONNECTION_URL, () => console.log("connected to database"));
 
