@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const application = require("../models/applicant");
+const Applicant = require("../models/applicant");
 
 router.get("/", async (req, res) => {
-  let applicants = await application.find();
+  let applicants = await Applicant.find();
   return res.status(200).json({ applicants });
 });
 
 router.get("/:id", async (req, res) => {
   let id = req.params.id;
-  let applicant = await application.findById(id);
+  let applicant = await Applicant.findById(id);
   return res.status(200).json({ applicant });
 });
 
@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   let applicant;
 
   try {
-    applicant = new application(fields);
+    applicant = new Applicant(fields);
     await applicant.save();
   } catch (error) {
     return res.status(400).json({ error });
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
 
 router.patch("/", async (req, res) => {
   let fields = req.body.applicant;
-  let applicant = await application.findById(fields.id);
+  let applicant = await Applicant.findById(fields.id);
 
   let fieldKeys = Object.keys(fields);
 
@@ -44,7 +44,7 @@ router.patch("/", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   let id = req.params.id;
-  await application.findByIdAndDelete(id);
+  await Applicant.findByIdAndDelete(id);
 
   return res.status(200).json({ id });
 });
